@@ -6,12 +6,29 @@
     <title>フローロドラメガデビューイベント対象商品</title>
     <link rel="icon" href="https://lh3.googleusercontent.com/d/1lJZ5KAfRdokouoNU9c5pWY1TDrsi_lOr" type="image/x-icon">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background-image: url('https://lh3.googleusercontent.com/d/1KwK34lcL1Er7bhrdEBPDOaBlz0Ag0xuD');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-attachment: fixed;
+            z-index: -1; /* 배경을 콘텐츠 뒤에 배치 */
         }
 
         .title {
@@ -22,7 +39,7 @@
             background: rgba(0, 0, 0, 0.6);
             padding: 10px;
             border-radius: 5px;
-            margin: 0 auto;
+            margin: 20px auto;
         }
 
         .products {
@@ -48,12 +65,12 @@
             background: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
             text-align: center;
-            box-sizing: border-box;
         }
 
         .product img {
-            width: 150px;
-            height: 150px;
+            width: 100%;
+            max-width: 150px;
+            height: auto;
             display: block;
             margin: 10px auto;
         }
@@ -67,6 +84,7 @@
     </style>
 </head>
 <body>
+    <div class="background"></div> <!-- 배경을 별도 요소로 추가 -->
     <h2 class="title">【フローロドラ】<br>メガデビューイベント対象商品</h2>
     <div class="products">
         <a href="https://www.qoo10.jp/g/1140037164" class="product">
