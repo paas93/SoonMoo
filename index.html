@@ -259,27 +259,31 @@ async function saveSchedule(id) {
   const time = document.getElementById(id + "Time").value;
   const level = document.getElementById(id + "Level").value;
 
-  // ✅ 여기! 입력값 검사 + 경고 메시지 띄우기
   const warning = document.getElementById(id + "Warning");
   if (!date || !time || !level) {
     if (warning) {
       warning.textContent = "📢 날짜, 시간, 숙련도를 모두 선택해주세요!";
       warning.style.color = "crimson";
     }
-    return; // ❌ 저장 중단
+    return;
   } else {
-    if (warning) warning.textContent = ""; // ✅ 경고 메시지 제거
+    if (warning) warning.textContent = "";
   }
 
   const display = `📌 예정: ${date} ${time} (${level})`;
   document.getElementById(id + "Schedule").textContent = display.trim();
 
   try {
-    await fetch(...);
+    await fetch(`${API_BASE}/schedules/${id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ date, time, level })
+    });
   } catch (err) {
     console.error("일정 저장 실패:", err);
   }
 }
+
 
 
 async function deleteCard(id, btn) {
