@@ -304,7 +304,7 @@ async function loadSchedule(id) {
 }
 // Supabase Realtime 설정
 const SUPABASE_URL = "https://fqtlcrytdwdtnwugtpqt.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; // 너의 anon 키
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxdGxjcnl0ZHdkdG53dWd0cHF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE0NDM0OTYsImV4cCI6MjA2NzAxOTQ5Nn0.e-eaU_iwJE9A1ubsb7Mqq-uVXqWHSO95bXK5YXwZatE"; // 너의 anon 키
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // 일정 변경 감지
