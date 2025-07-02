@@ -1,10 +1,18 @@
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
+const dotenv = require('dotenv');
+const { createClient } = require('@supabase/supabase-js');
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
+app.use(express.json()); // 🔥 POST 요청의 body를 읽을 수 있게 함
 
+// Supabase 클라이언트 설정
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+
+// ✅ 캐릭터 프로필 API (기존 유지)
 app.get('/armories/characters/:nickname/profiles', async (req, res) => {
   const { nickname } = req.params;
   const url = `https://developer-lostark.game.onstove.com/armories/characters/${encodeURIComponent(nickname)}/profiles`;
@@ -23,6 +31,48 @@ app.get('/armories/characters/:nickname/profiles', async (req, res) => {
   }
 });
 
-// 🚀 Render 호환 포트 설정
+
+// ✅ 레이드 카드 API
+
+// 카드 조회
+app.get('/cards/:raid_id', async (req, res) => {
+  const { raid_id } = req.params;
+  const { data, error } = await supabase
+    .from('raid_cards')
+    .select('*')
+    .eq('raid_id', raid_id)
+    .order('created_at', { ascending: true });
+
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+// 카드 추가
+app.post('/cards', async (req, res) => {
+  const { raid_id, nickname, role } = req.body;
+  const { data, error } = await supabase
+    .from('raid_cards')
+    .insert([{ raid_id, nickname, role }])
+    .select()
+    .single();
+
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+// 카드 삭제
+app.delete('/cards/:id', async (req, res) => {
+  const { id } = req.params;
+  const { error } = await supabase
+    .from('raid_cards')
+    .delete()
+    .eq('id', id);
+
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ success: true });
+});
+
+
+// 🚀 Render 포트 설정
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 서버 실행 중! http://localhost:${PORT}`));
