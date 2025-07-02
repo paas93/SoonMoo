@@ -1,19 +1,14 @@
 {
-  "name": "test",
+  "name": "soonmoo-api",
   "version": "1.0.0",
+  "description": "Lost Ark 캐릭터 프로필 API Proxy Server",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
+    "express": "^4.18.2",
     "cors": "^2.8.5",
-    "dotenv": "^17.0.1",
-    "express": "^5.1.0",
-    "node-fetch": "^3.3.2"
+    "dotenv": "^16.4.5"
   }
 }

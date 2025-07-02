@@ -1,5 +1,4 @@
 const express = require('express');
-const fetch = require('node-fetch');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -23,6 +22,7 @@ app.get('/armories/characters/:nickname/profiles', async (req, res) => {
     res.status(500).json({ error: '데이터 요청 실패', detail: err.toString() });
   }
 });
-// 수정된 버전 (Render 호환)
+
+// 🚀 Render 호환 포트 설정
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 서버 실행 중! http://localhost:${PORT}`));
