@@ -187,7 +187,7 @@ async function addCharacter(event, raidId) {
   }
 
   try {
-    const res = await fetch(`http://localhost:3000/armories/characters/${encodeURIComponent(nickname)}/profiles`);
+    const res = await fetch(`https://soonmoo-server.onrender.com/armories/characters/${encodeURIComponent(nickname)}/profiles`);
     if (!res.ok) throw new Error();
     const data = await res.json();
     const card = createCard(data, role);
