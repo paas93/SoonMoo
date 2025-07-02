@@ -106,11 +106,15 @@ app.post('/schedules/:raid_id', async (req, res) => {
   console.log("📥 요청 받은 raid_id:", raid_id);
   console.log("📥 요청 받은 body:", req.body);
 
-  const { data, error } = await supabase
-    .from('raid_schedules')
-    .upsert({ raid_id, date, time, level, updated_at: new Date().toISOString() })
-    .select()
-    .single();
+const { data, error } = await supabase
+  .from('raid_schedules')
+  .upsert(
+    { raid_id, date, time, level, updated_at: new Date().toISOString() },
+    { onConflict: ['raid_id'] } // ✅ 이거 추가!
+  )
+  .select()
+  .single();
+
 
   // 🔍 Supabase 응답도 확인
   console.log("🧾 Supabase 응답:", data, error);
