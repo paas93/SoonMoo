@@ -112,6 +112,7 @@ app.post('/schedules/:raid_id', async (req, res) => {
   res.json(data);
 });
 
+console.log("🧾 Supabase 응답:", data, error);
 
 // 🚀 Render 포트 설정
 const PORT = process.env.PORT || 3000;
