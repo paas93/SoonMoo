@@ -31,7 +31,6 @@ app.get('/armories/characters/:nickname/profiles', async (req, res) => {
   }
 });
 
-
 // ✅ 레이드 카드 API
 
 // 카드 조회
@@ -70,6 +69,39 @@ app.delete('/cards/:id', async (req, res) => {
 
   if (error) return res.status(500).json({ error: error.message });
   res.json({ success: true });
+});
+
+
+// ✅ 레이드 일정 API 추가 🔥
+
+// 일정 불러오기
+app.get('/schedules/:raid_id', async (req, res) => {
+  const { raid_id } = req.params;
+  const { data, error } = await supabase
+    .from('raid_schedules')
+    .select('*')
+    .eq('raid_id', raid_id)
+    .single();
+
+  if (error && error.code !== 'PGRST116')
+    return res.status(500).json({ error: error.message });
+
+  res.json(data || {});
+});
+
+// 일정 저장/업데이트
+app.post('/schedules/:raid_id', async (req, res) => {
+  const { raid_id } = req.params;
+  const { date, time, level } = req.body;
+
+  const { data, error } = await supabase
+    .from('raid_schedules')
+    .upsert({ raid_id, date, time, level, updated_at: new Date().toISOString() })
+    .select()
+    .single();
+
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
 });
 
 
