@@ -177,46 +177,56 @@
       window.scrollTo({ top: document.getElementById(id).offsetTop - 20, behavior: "smooth" });
     }
 
-    async function addCharacter(event, raidId) {
-      event.preventDefault();
-      const form = event.target;
-      const nickname = form.querySelector("input").value.trim();
-      const role = form.querySelector("select").value;
-      const cardBox = document.getElementById(raidId + "Cards");
+async function addCharacter(event, raidId) {
+  event.preventDefault();
+  const form = event.target;
+  const nickname = form.querySelector("input").value.trim();
+  const role = form.querySelector("select").value;
+  const cardBox = document.getElementById(raidId + "Cards");
 
-      if (cardBox.children.length >= 8) {
-        alert("⚠️ 이 파티엔 최대 8명까지만 등록할 수 있어요!");
-        return;
-      }
+  if (cardBox.children.length >= 8) {
+    alert("⚠️ 이 파티엔 최대 8명까지만 등록할 수 있어요!");
+    return;
+  }
 
-      try {
-        const res = await fetch(`${API_BASE}/armories/characters/${encodeURIComponent(nickname)}/profiles`);
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        const card = createCard(data, role);
-        cardBox.appendChild(card);
-        saveRaidCards(raidId);  // ✨ 저장 빠짐 없이!
-        form.reset();
-      } catch {
-        alert("❌ 캐릭터 정보를 불러오지 못했어요.");
-      }
-    }
+  try {
+    const res = await fetch(`${API_BASE}/armories/characters/${encodeURIComponent(nickname)}/profiles`);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
 
-    function createCard(data, role) {
-      const div = document.createElement("div");
-      div.className = "card";
-      div.innerHTML = `
-        <button onclick="this.parentElement.remove(); saveRaidCardsFromNode(this)">×</button>
-        <img src="${data.CharacterImage}" alt="이미지" />
-        <h3>${data.CharacterName}</h3>
-        <p>직업: ${data.CharacterClassName}</p>
-        <p>레벨: ${data.ItemAvgLevel}</p>
-        <p>역할: ${role}</p>
-      `;
-      div.dataset.name = data.CharacterName;
-      div.dataset.role = role;
-      return div;
-    }
+    // 🔥 Supabase에 저장
+    const save = await fetch(`${API_BASE}/cards`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ raid_id: raidId, nickname, role })
+    });
+    const saved = await save.json();
+
+    // 카드 생성 후 화면에 추가
+    const card = createCard(data, role, saved.id);
+    cardBox.appendChild(card);
+    form.reset();
+  } catch (e) {
+    alert("❌ 캐릭터 정보를 불러오지 못했어요.");
+    console.error(e);
+  }
+}
+
+
+function createCard(data, role, id) {
+  const div = document.createElement("div");
+  div.className = "card";
+  div.innerHTML = `
+    <button onclick="deleteCard('${id}', this)">×</button>
+    <img src="${data.CharacterImage}" alt="이미지" />
+    <h3>${data.CharacterName}</h3>
+    <p>직업: ${data.CharacterClassName}</p>
+    <p>레벨: ${data.ItemAvgLevel}</p>
+    <p>역할: ${role}</p>
+  `;
+  return div;
+}
+
 
     function saveRaidCards(raidId) {
       const cards = Array.from(document.getElementById(raidId + "Cards").children).map(c => ({
@@ -231,21 +241,25 @@
       saveRaidCards(raidId);
     }
 
-    function loadRaidCards(raidId) {
-      const saved = localStorage.getItem("raid_" + raidId);
-      if (!saved) return;
-      const cardBox = document.getElementById(raidId + "Cards");
-      const list = JSON.parse(saved);
-      list.forEach(async saved => {
-        try {
-          const res = await fetch(`${API_BASE}/armories/characters/${encodeURIComponent(saved.name)}/profiles`);
-          if (!res.ok) return;
-          const data = await res.json();
-          const card = createCard(data, saved.role);
-          cardBox.appendChild(card);
-        } catch {
-          console.warn("불러오기 실패:", saved.name);
-        }
+async function loadRaidCards(raidId) {
+  try {
+    const res = await fetch(`${API_BASE}/cards/${raidId}`);
+    const list = await res.json();
+    const cardBox = document.getElementById(raidId + "Cards");
+    cardBox.innerHTML = "";
+
+    for (const cardInfo of list) {
+      const res = await fetch(`${API_BASE}/armories/characters/${encodeURIComponent(cardInfo.nickname)}/profiles`);
+      if (!res.ok) continue;
+      const data = await res.json();
+      const card = createCard(data, cardInfo.role, cardInfo.id);
+      cardBox.appendChild(card);
+    }
+  } catch (e) {
+    console.warn("카드 불러오기 실패:", e);
+  }
+}
+
       });
     }
 
@@ -268,6 +282,15 @@ async function saveSchedule(id) {
     });
   } catch (err) {
     console.error("일정 저장 실패:", err);
+  }
+}
+async function deleteCard(id, btn) {
+  try {
+    await fetch(`${API_BASE}/cards/${id}`, { method: "DELETE" });
+    btn.parentElement.remove();
+  } catch (e) {
+    alert("❌ 삭제 실패!");
+    console.error(e);
   }
 }
 
