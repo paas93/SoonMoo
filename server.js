@@ -107,12 +107,11 @@ app.post('/schedules/:raid_id', async (req, res) => {
     .upsert({ raid_id, date, time, level, updated_at: new Date().toISOString() })
     .select()
     .single();
-
+console.log("🧾 Supabase 응답:", data, error);
   if (error) return res.status(500).json({ error: error.message });
   res.json(data);
 });
 
-console.log("🧾 Supabase 응답:", data, error);
 
 // 🚀 Render 포트 설정
 const PORT = process.env.PORT || 3000;
