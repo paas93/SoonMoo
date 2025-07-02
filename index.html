@@ -259,10 +259,13 @@ async function saveSchedule(id) {
   const time = document.getElementById(id + "Time").value;
   const level = document.getElementById(id + "Level").value;
 
-  const display = [date, time, level].filter(Boolean).length
-    ? `📌 예정: ${date || ""} ${time || ""} ${level ? "(" + level + ")" : ""}`
-    : "";
+  // ✅ 입력값 유효성 검사
+  if (!date || !time || !level) {
+    alert("날짜, 시간, 숙련도를 모두 선택해주세요!");
+    return; // ❌ 빈 값이면 저장 요청 막음
+  }
 
+  const display = `📌 예정: ${date} ${time} (${level})`;
   document.getElementById(id + "Schedule").textContent = display.trim();
 
   try {
@@ -275,6 +278,7 @@ async function saveSchedule(id) {
     console.error("일정 저장 실패:", err);
   }
 }
+
 async function deleteCard(id, btn) {
   try {
     await fetch(`${API_BASE}/cards/${id}`, { method: "DELETE" });
