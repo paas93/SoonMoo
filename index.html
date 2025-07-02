@@ -137,21 +137,26 @@
       section.id = raid.id;
       section.innerHTML = `
         <h2>${raid.label}</h2>
-        <div class="schedule">
-          <label>📅 <input type="date" id="${raid.id}Date" /></label>
-          <label>⏰ <input type="time" id="${raid.id}Time" /></label>
-          <label>🎯 
-            <select id="${raid.id}Level">
-              <option value="">숙련도 선택</option>
-              <option value="트라이">트라이</option>
-              <option value="반숙">반숙</option>
-              <option value="숙제">숙제</option>
-            </select>
-          </label>
-          <button onclick="saveSchedule('${raid.id}')">저장</button>
-          <button onclick="clearSchedule('${raid.id}')">삭제</button>
-          <div id="${raid.id}Schedule" style="margin-top:8px;"></div>
-        </div>
+<div class="schedule">
+  <label>📅 <input type="date" id="${raid.id}Date" /></label>
+  <label>⏰ <input type="time" id="${raid.id}Time" /></label>
+  <label>🎯 
+    <select id="${raid.id}Level">
+      <option value="">숙련도 선택</option>
+      <option value="트라이">트라이</option>
+      <option value="반숙">반숙</option>
+      <option value="숙제">숙제</option>
+    </select>
+  </label>
+
+  <!-- ✅ 여기에 경고 메시지 박스 추가 -->
+  <div id="${raid.id}Warning" class="warning" style="margin-top: 4px; color: crimson;"></div>
+
+  <button onclick="saveSchedule('${raid.id}')">저장</button>
+  <button onclick="clearSchedule('${raid.id}')">삭제</button>
+  <div id="${raid.id}Schedule" style="margin-top:8px;"></div>
+</div>
+
         <form onsubmit="addCharacter(event, '${raid.id}')">
           <input type="text" placeholder="닉네임" required />
           <select>
