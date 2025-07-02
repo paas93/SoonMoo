@@ -23,7 +23,6 @@
     .raid-icon {
       width: 140px;
       height: 170px;
-      padding-bottom: 6px;
       background: #2e2e3e;
       border-radius: 10px;
       overflow: hidden;
@@ -37,16 +36,16 @@
       height: 120px;
       object-fit: cover;
     }
-.raid-icon span {
-  font-size: 14px;
-  font-weight: bold;
-  text-align: center;
-  line-height: 1.4;
-  white-space: normal;     /* 자동 줄바꿈 허용 */
-  word-break: keep-all;
-  display: block;
-  padding: 6px 8px;
-}
+    .raid-icon span {
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      line-height: 1.4;
+      white-space: normal;
+      word-break: keep-all;
+      display: block;
+      padding: 6px 8px;
+    }
     .raid-section {
       display: none;
       max-width: 700px;
@@ -107,175 +106,177 @@
   <h1>순무 레이드 모집</h1>
   <div class="raid-grid" id="raidButtons"></div>
   <div id="raidSections"></div>
-<script>
-const raids = [
-  { id: "kamen-normal", label: "카멘 - 노말<br>(1610)", img: "https://lh3.googleusercontent.com/d/1-DZuum0b_nDQ0D0VNUC2dXKgmUi8t9MA" },
-  { id: "kamen-hard", label: "카멘 - 하드<br>(1630)", img: "https://lh3.googleusercontent.com/d/1-DZuum0b_nDQ0D0VNUC2dXKgmUi8t9MA" },
-  { id: "ekidna-normal", label: "에키드나 - 노말<br>(1620)", img: "https://lh3.googleusercontent.com/d/15jGwoWCn364msWnrAni21PBGMGXA8Uw1" },
-  { id: "ekidna-hard", label: "에키드나 - 하드<br>(1630)", img: "https://lh3.googleusercontent.com/d/15jGwoWCn364msWnrAni21PBGMGXA8Uw1" },
-  { id: "act1-normal", label: "1막 - 노말<br>(1660)", img: "https://lh3.googleusercontent.com/d/1aqCD7EsYp6a5knUtAjp_WrMM8-IwErqM" },
-  { id: "act1-hard", label: "1막 - 하드<br>(1680)", img: "https://lh3.googleusercontent.com/d/1aqCD7EsYp6a5knUtAjp_WrMM8-IwErqM" },
-  { id: "act2-normal", label: "2막 - 노말<br>(1670)", img: "https://lh3.googleusercontent.com/d/1tULTC_k8jUCYd8NwpbLpULnwmOscgkOA" },
-  { id: "act2-hard", label: "2막 - 하드<br>(1690)", img: "https://lh3.googleusercontent.com/d/1tULTC_k8jUCYd8NwpbLpULnwmOscgkOA" },
-  { id: "act3-normal", label: "3막 - 노말<br>(1680)", img: "https://lh3.googleusercontent.com/d/1j_mlngwmULQdd0SANXVg6XbgRlkNpY_M" },
-  { id: "act3-hard", label: "3막 - 하드<br>(1700)", img: "https://lh3.googleusercontent.com/d/1j_mlngwmULQdd0SANXVg6XbgRlkNpY_M" },
-];
 
-for (const raid of raids) {
-  const btn = document.createElement("div");
-  btn.className = "raid-icon";
-  btn.innerHTML = `<img src="${raid.img}" alt="${raid.label}" /><span>${raid.label}</span>`;
-  btn.onclick = () => showRaid(raid.id);
-  document.getElementById("raidButtons").appendChild(btn);
+  <script>
+    const API_BASE = "https://soonmoo.onrender.com";
 
-  const section = document.createElement("div");
-  section.className = "raid-section";
-  section.id = raid.id;
-  section.innerHTML = `
-    <h2>${raid.label}</h2>
-    <div class="schedule">
-      <label>📅 <input type="date" id="${raid.id}Date" /></label>
-      <label>⏰ <input type="time" id="${raid.id}Time" /></label>
-      <label>🎯 
-        <select id="${raid.id}Level">
-          <option value="">숙련도 선택</option>
-          <option value="트라이">트라이</option>
-          <option value="반숙">반숙</option>
-          <option value="숙제">숙제</option>
-        </select>
-      </label>
-      <button onclick="saveSchedule('${raid.id}')">저장</button>
-      <button onclick="clearSchedule('${raid.id}')">삭제</button>
-      <div id="${raid.id}Schedule" style="margin-top:8px;"></div>
-    </div>
-    <form onsubmit="addCharacter(event, '${raid.id}')">
-      <input type="text" placeholder="닉네임" required />
-      <select>
-        <option value="딜러">딜러</option>
-        <option value="서포터">서포터</option>
-      </select>
-      <button type="submit">등록</button>
-    </form>
-    <div class="cards" id="${raid.id}Cards"></div>
-  `;
-  document.getElementById("raidSections").appendChild(section);
+    const raids = [
+      { id: "kamen-normal", label: "카멘 - 노말<br>(1610)", img: "https://lh3.googleusercontent.com/d/1-DZuum0b_nDQ0D0VNUC2dXKgmUi8t9MA" },
+      { id: "kamen-hard", label: "카멘 - 하드<br>(1630)", img: "https://lh3.googleusercontent.com/d/1-DZuum0b_nDQ0D0VNUC2dXKgmUi8t9MA" },
+      { id: "ekidna-normal", label: "에키드나 - 노말<br>(1620)", img: "https://lh3.googleusercontent.com/d/15jGwoWCn364msWnrAni21PBGMGXA8Uw1" },
+      { id: "ekidna-hard", label: "에키드나 - 하드<br>(1630)", img: "https://lh3.googleusercontent.com/d/15jGwoWCn364msWnrAni21PBGMGXA8Uw1" },
+      { id: "act1-normal", label: "1막 - 노말<br>(1660)", img: "https://lh3.googleusercontent.com/d/1aqCD7EsYp6a5knUtAjp_WrMM8-IwErqM" },
+      { id: "act1-hard", label: "1막 - 하드<br>(1680)", img: "https://lh3.googleusercontent.com/d/1aqCD7EsYp6a5knUtAjp_WrMM8-IwErqM" },
+      { id: "act2-normal", label: "2막 - 노말<br>(1670)", img: "https://lh3.googleusercontent.com/d/1tULTC_k8jUCYd8NwpbLpULnwmOscgkOA" },
+      { id: "act2-hard", label: "2막 - 하드<br>(1690)", img: "https://lh3.googleusercontent.com/d/1tULTC_k8jUCYd8NwpbLpULnwmOscgkOA" },
+      { id: "act3-normal", label: "3막 - 노말<br>(1680)", img: "https://lh3.googleusercontent.com/d/1j_mlngwmULQdd0SANXVg6XbgRlkNpY_M" },
+      { id: "act3-hard", label: "3막 - 하드<br>(1700)", img: "https://lh3.googleusercontent.com/d/1j_mlngwmULQdd0SANXVg6XbgRlkNpY_M" },
+    ];
 
-  new Sortable(document.getElementById(raid.id + "Cards"), {
-    animation: 150,
-    onEnd: () => saveRaidCards(raid.id)
-  });
+    for (const raid of raids) {
+      const btn = document.createElement("div");
+      btn.className = "raid-icon";
+      btn.innerHTML = `<img src="${raid.img}" alt="${raid.label}" /><span>${raid.label}</span>`;
+      btn.onclick = () => showRaid(raid.id);
+      document.getElementById("raidButtons").appendChild(btn);
 
-  loadRaidCards(raid.id);
-  loadSchedule(raid.id);
-}
-function showRaid(id) {
-  document.querySelectorAll(".raid-section").forEach(e => e.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  window.scrollTo({ top: document.getElementById(id).offsetTop - 20, behavior: "smooth" });
-}
+      const section = document.createElement("div");
+      section.className = "raid-section";
+      section.id = raid.id;
+      section.innerHTML = `
+        <h2>${raid.label}</h2>
+        <div class="schedule">
+          <label>📅 <input type="date" id="${raid.id}Date" /></label>
+          <label>⏰ <input type="time" id="${raid.id}Time" /></label>
+          <label>🎯 
+            <select id="${raid.id}Level">
+              <option value="">숙련도 선택</option>
+              <option value="트라이">트라이</option>
+              <option value="반숙">반숙</option>
+              <option value="숙제">숙제</option>
+            </select>
+          </label>
+          <button onclick="saveSchedule('${raid.id}')">저장</button>
+          <button onclick="clearSchedule('${raid.id}')">삭제</button>
+          <div id="${raid.id}Schedule" style="margin-top:8px;"></div>
+        </div>
+        <form onsubmit="addCharacter(event, '${raid.id}')">
+          <input type="text" placeholder="닉네임" required />
+          <select>
+            <option value="딜러">딜러</option>
+            <option value="서포터">서포터</option>
+          </select>
+          <button type="submit">등록</button>
+        </form>
+        <div class="cards" id="${raid.id}Cards"></div>
+      `;
+      document.getElementById("raidSections").appendChild(section);
 
-async function addCharacter(event, raidId) {
-  event.preventDefault();
-  const form = event.target;
-  const nickname = form.querySelector("input").value.trim();
-  const role = form.querySelector("select").value;
-  const cardBox = document.getElementById(raidId + "Cards");
+      new Sortable(document.getElementById(raid.id + "Cards"), {
+        animation: 150,
+        onEnd: () => saveRaidCards(raid.id)
+      });
 
-  if (cardBox.children.length >= 8) {
-    alert(⚠️ 이 파티엔 최대 8명까지만 등록할 수 있어요!");
-    return;
-  }
-
-  try {
-    const res = await fetch(`https://soonmoo.onrender.com/armories/characters/${encodeURIComponent(nickname)}/profiles`);
-    if (!res.ok) throw new Error();
-    const data = await res.json();
-    const card = createCard(data, role);
-    cardBox.appendChild(card);
-    form.reset();
-    saveRaidCards(raidId);
-  } catch {
-    alert("❌ 캐릭터 정보를 불러오지 못했어요.");
-  }
-}
-
-function createCard(data, role) {
-  const div = document.createElement("div");
-  div.className = "card";
-  div.innerHTML = `
-    <button onclick="this.parentElement.remove(); saveRaidCardsFromNode(this)">×</button>
-    <img src="${data.CharacterImage}" alt="이미지" />
-    <h3>${data.CharacterName}</h3>
-    <p>직업: ${data.CharacterClassName}</p>
-    <p>레벨: ${data.ItemAvgLevel}</p>
-    <p>역할: ${role}</p>
-  `;
-  div.dataset.nickname = data.CharacterName;
-  div.dataset.role = role;
-  return div;
-}
-
-function saveRaidCards(raidId) {
-  const cards = Array.from(document.getElementById(raidId + "Cards").children).map(c => ({
-    name: c.dataset.nickname,
-    role: c.dataset.role
-  }));
-  localStorage.setItem("raid_" + raidId, JSON.stringify(cards));
-}
-
-function saveRaidCardsFromNode(btn) {
-  const raidId = btn.closest(".cards").id.replace("Cards", "");
-  saveRaidCards(raidId);
-}
-
-function loadRaidCards(raidId) {
-  const saved = localStorage.getItem("raid_" + raidId);
-  if (!saved) return;
-  const cardBox = document.getElementById(raidId + "Cards");
-  const list = JSON.parse(saved);
-  list.forEach(async saved => {
-    try {
-      const res = await fetch(`https://soonmoo.onrender.com/armories/characters/${encodeURIComponent(saved.name)}/profiles`);
-      if (!res.ok) return;
-      const data = await res.json();
-      const card = createCard(data, saved.role);
-      cardBox.appendChild(card);
-    } catch {
-      console.warn("불러오기 실패:", saved.name);
+      loadRaidCards(raid.id);
+      loadSchedule(raid.id);
     }
-  });
-}
 
-// 📅⏰🎯 일정 저장 및 복원
-function saveSchedule(id) {
-  const date = document.getElementById(id + "Date").value;
-  const time = document.getElementById(id + "Time").value;
-  const level = document.getElementById(id + "Level").value;
-  const display = [date, time, level].filter(Boolean).length
-    ? `📌 예정: ${date || ""} ${time || ""} ${level ? "(" + level + ")" : ""}`
-    : "";
-  document.getElementById(id + "Schedule").textContent = display.trim();
-  localStorage.setItem("schedule_" + id, JSON.stringify({ date, time, level }));
-}
+    function showRaid(id) {
+      document.querySelectorAll(".raid-section").forEach(e => e.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      window.scrollTo({ top: document.getElementById(id).offsetTop - 20, behavior: "smooth" });
+    }
 
-function loadSchedule(id) {
-  const saved = localStorage.getItem("schedule_" + id);
-  if (!saved) return;
-  const { date, time, level } = JSON.parse(saved);
-  if (date) document.getElementById(id + "Date").value = date;
-  if (time) document.getElementById(id + "Time").value = time;
-  if (level) document.getElementById(id + "Level").value = level;
-  saveSchedule(id);
-}
+    async function addCharacter(event, raidId) {
+      event.preventDefault();
+      const form = event.target;
+      const nickname = form.querySelector("input").value.trim();
+      const role = form.querySelector("select").value;
+      const cardBox = document.getElementById(raidId + "Cards");
 
-// ❌ 일정 삭제
-function clearSchedule(id) {
-  document.getElementById(id + "Date").value = "";
-  document.getElementById(id + "Time").value = "";
-  document.getElementById(id + "Level").value = "";
-  document.getElementById(id + "Schedule").textContent = "";
-  localStorage.removeItem("schedule_" + id);
-}
-</script>
+      if (cardBox.children.length >= 8) {
+        alert("⚠️ 이 파티엔 최대 8명까지만 등록할 수 있어요!");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/armories/characters/${encodeURIComponent(nickname)}/profiles`);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        const card = createCard(data, role);
+        cardBox.appendChild(card);
+        saveRaidCards(raidId);  // ✨ 저장 빠짐 없이!
+        form.reset();
+      } catch {
+        alert("❌ 캐릭터 정보를 불러오지 못했어요.");
+      }
+    }
+
+    function createCard(data, role) {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `
+        <button onclick="this.parentElement.remove(); saveRaidCardsFromNode(this)">×</button>
+        <img src="${data.CharacterImage}" alt="이미지" />
+        <h3>${data.CharacterName}</h3>
+        <p>직업: ${data.CharacterClassName}</p>
+        <p>레벨: ${data.ItemAvgLevel}</p>
+        <p>역할: ${role}</p>
+      `;
+      div.dataset.name = data.CharacterName;
+      div.dataset.role = role;
+      return div;
+    }
+
+    function saveRaidCards(raidId) {
+      const cards = Array.from(document.getElementById(raidId + "Cards").children).map(c => ({
+        name: c.dataset.name,
+        role: c.dataset.role
+      }));
+      localStorage.setItem("raid_" + raidId, JSON.stringify(cards));
+    }
+
+    function saveRaidCardsFromNode(btn) {
+      const raidId = btn.closest(".cards").id.replace("Cards", "");
+      saveRaidCards(raidId);
+    }
+
+    function loadRaidCards(raidId) {
+      const saved = localStorage.getItem("raid_" + raidId);
+      if (!saved) return;
+      const cardBox = document.getElementById(raidId + "Cards");
+      const list = JSON.parse(saved);
+      list.forEach(async saved => {
+        try {
+          const res = await fetch(`${API_BASE}/armories/characters/${encodeURIComponent(saved.name)}/profiles`);
+          if (!res.ok) return;
+          const data = await res.json();
+          const card = createCard(data, saved.role);
+          cardBox.appendChild(card);
+        } catch {
+          console.warn("불러오기 실패:", saved.name);
+        }
+      });
+    }
+
+    function saveSchedule(id) {
+      const date = document.getElementById(id + "Date").value;
+      const time = document.getElementById(id + "Time").value;
+      const level = document.getElementById(id + "Level").value;
+      const display = [date, time, level].filter(Boolean).length
+        ? `📌 예정: ${date || ""} ${time || ""} ${level ? "(" + level + ")" : ""}`
+        : "";
+      document.getElementById(id + "Schedule").textContent = display.trim();
+      localStorage.setItem("schedule_" + id, JSON.stringify({ date, time, level }));
+    }
+
+    function loadSchedule(id) {
+      const saved = localStorage.getItem("schedule_" + id);
+      if (!saved) return;
+      const { date, time, level } = JSON.parse(saved);
+      if (date) document.getElementById(id + "Date").value = date;
+      if (time) document.getElementById(id + "Time").value = time;
+      if (level) document.getElementById(id + "Level").value = level;
+      saveSchedule(id);
+    }
+
+    function clearSchedule(id) {
+      document.getElementById(id + "Date").value = "";
+      document.getElementById(id + "Time").value = "";
+      document.getElementById(id + "Level").value = "";
+      document.getElementById(id + "Schedule").textContent = "";
+      localStorage.removeItem("schedule_" + id);
+    }
+  </script>
 </body>
 </html>
