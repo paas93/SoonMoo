@@ -182,7 +182,7 @@ async function addCharacter(event, raidId) {
   const cardBox = document.getElementById(raidId + "Cards");
 
   if (cardBox.children.length >= 8) {
-    alert("⚠️ 이 파티엔 최대 8명까지만 등록할 수 있어요!");
+    alert(⚠️ 이 파티엔 최대 8명까지만 등록할 수 있어요!");
     return;
   }
 
@@ -235,7 +235,7 @@ function loadRaidCards(raidId) {
   const list = JSON.parse(saved);
   list.forEach(async saved => {
     try {
-      const res = await fetch(`http://localhost:3000/armories/characters/${encodeURIComponent(saved.name)}/profiles`);
+      const res = await fetch(`https://soonmoo.onrender.com/armories/characters/${encodeURIComponent(saved.name)}/profiles`);
       if (!res.ok) return;
       const data = await res.json();
       const card = createCard(data, saved.role);
