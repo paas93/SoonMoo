@@ -228,18 +228,7 @@ function createCard(data, role, id) {
 }
 
 
-    function saveRaidCards(raidId) {
-      const cards = Array.from(document.getElementById(raidId + "Cards").children).map(c => ({
-        name: c.dataset.name,
-        role: c.dataset.role
-      }));
-      localStorage.setItem("raid_" + raidId, JSON.stringify(cards));
-    }
 
-    function saveRaidCardsFromNode(btn) {
-      const raidId = btn.closest(".cards").id.replace("Cards", "");
-      saveRaidCards(raidId);
-    }
 
 async function loadRaidCards(raidId) {
   try {
