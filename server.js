@@ -1,5 +1,14 @@
 const express = require('express');
 const cors = require('cors');
+
+const corsOptions = {
+  origin: "https://paas93.github.io",
+  methods: ["GET", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+};
+
+app.use(cors(corsOptions));
+
 const dotenv = require('dotenv');
 const { createClient } = require('@supabase/supabase-js');
 
