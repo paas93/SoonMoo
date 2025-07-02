@@ -97,34 +97,45 @@ app.get('/schedules/:raid_id', async (req, res) => {
   res.json(data || {});
 });
 
-// 일정 저장/업데이트
+// ✅ 일정 저장/업데이트
 app.post('/schedules/:raid_id', async (req, res) => {
   const { raid_id } = req.params;
   const { date, time, level } = req.body;
 
-  // 🔍 디버깅 로그
   console.log("📥 요청 받은 raid_id:", raid_id);
   console.log("📥 요청 받은 body:", req.body);
 
-const { data, error } = await supabase
-  .from('raid_schedules')
-  .upsert(
-    { raid_id, date, time, level, updated_at: new Date().toISOString() },
-    { onConflict: ['raid_id'] } // ✅ 이거 추가!
-  )
-  .select()
-  .single();
+  const { data, error } = await supabase
+    .from('raid_schedules')
+    .upsert(
+      { raid_id, date, time, level, updated_at: new Date().toISOString() },
+      { onConflict: ['raid_id'] } // ✅ 충돌 방지용
+    )
+    .select()
+    .single();
 
-
-  // 🔍 Supabase 응답도 확인
   console.log("🧾 Supabase 응답:", data, error);
 
   if (error) return res.status(500).json({ error: error.message });
   res.json(data);
 });
 
+// ✅ 일정 삭제
+app.delete('/schedules/:raid_id', async (req, res) => {
+  const { raid_id } = req.params;
 
+  console.log("🗑️ 삭제 요청 받은 raid_id:", raid_id);
 
-// 🚀 Render 포트 설정
+  const { error } = await supabase
+    .from('raid_schedules')
+    .delete()
+    .eq('raid_id', raid_id);
+
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ message: "삭제 완료" });
+});
+
+// ✅ Render 포트 설정
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 서버 실행 중! http://localhost:${PORT}`));
+app.listen(PORT, () => {
+  console.log(`🚀 서버 실행 중! http://localhost:${PORT}`);
