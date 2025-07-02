@@ -6,7 +6,9 @@ const { createClient } = require('@supabase/supabase-js');
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "https://paas93.github.io"
+}));
 app.use(express.json()); // 🔥 POST 요청의 body를 읽을 수 있게 함
 
 // Supabase 클라이언트 설정
