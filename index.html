@@ -249,34 +249,47 @@
       });
     }
 
-    function saveSchedule(id) {
-      const date = document.getElementById(id + "Date").value;
-      const time = document.getElementById(id + "Time").value;
-      const level = document.getElementById(id + "Level").value;
-      const display = [date, time, level].filter(Boolean).length
-        ? `📌 예정: ${date || ""} ${time || ""} ${level ? "(" + level + ")" : ""}`
-        : "";
-      document.getElementById(id + "Schedule").textContent = display.trim();
-      localStorage.setItem("schedule_" + id, JSON.stringify({ date, time, level }));
-    }
+async function saveSchedule(id) {
+  const date = document.getElementById(id + "Date").value;
+  const time = document.getElementById(id + "Time").value;
+  const level = document.getElementById(id + "Level").value;
 
-    function loadSchedule(id) {
-      const saved = localStorage.getItem("schedule_" + id);
-      if (!saved) return;
-      const { date, time, level } = JSON.parse(saved);
-      if (date) document.getElementById(id + "Date").value = date;
-      if (time) document.getElementById(id + "Time").value = time;
-      if (level) document.getElementById(id + "Level").value = level;
-      saveSchedule(id);
-    }
+  const display = [date, time, level].filter(Boolean).length
+    ? `📌 예정: ${date || ""} ${time || ""} ${level ? "(" + level + ")" : ""}`
+    : "";
 
-    function clearSchedule(id) {
-      document.getElementById(id + "Date").value = "";
-      document.getElementById(id + "Time").value = "";
-      document.getElementById(id + "Level").value = "";
-      document.getElementById(id + "Schedule").textContent = "";
-      localStorage.removeItem("schedule_" + id);
-    }
+  document.getElementById(id + "Schedule").textContent = display.trim();
+
+  try {
+    await fetch(`${API_BASE}/schedules/${id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ date, time, level })
+    });
+  } catch (err) {
+    console.error("일정 저장 실패:", err);
+  }
+}
+
+
+async function loadSchedule(id) {
+  try {
+    const res = await fetch(`${API_BASE}/schedules/${id}`);
+    if (!res.ok) return;
+
+    const { date, time, level } = await res.json();
+
+    if (date) document.getElementById(id + "Date").value = date;
+    if (time) document.getElementById(id + "Time").value = time;
+    if (level) document.getElementById(id + "Level").value = level;
+
+    saveSchedule(id); // 화면 출력
+  } catch (err) {
+    console.warn("일정 불러오기 실패:", err);
+  }
+}
+
+
   </script>
 </body>
 </html>
