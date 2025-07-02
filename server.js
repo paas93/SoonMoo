@@ -1,5 +1,11 @@
 const express = require('express');
 const cors = require('cors');
+const dotenv = require('dotenv');
+const { createClient } = require('@supabase/supabase-js');
+
+dotenv.config();
+
+const app = express();
 
 const corsOptions = {
   origin: "https://paas93.github.io",
@@ -7,18 +13,9 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"]
 };
 
-app.use(cors(corsOptions));
-
-const dotenv = require('dotenv');
-const { createClient } = require('@supabase/supabase-js');
-
-dotenv.config();
-
-const app = express();
-app.use(cors({
-  origin: "https://paas93.github.io"
-}));
-app.use(express.json()); // 🔥 POST 요청의 body를 읽을 수 있게 함
+app.use(cors(corsOptions)); // ✅ 이거 하나만!
+app.use(express.json());
+ // 🔥 POST 요청의 body를 읽을 수 있게 함
 
 // Supabase 클라이언트 설정
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
