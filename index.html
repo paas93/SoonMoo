@@ -302,6 +302,47 @@ async function loadSchedule(id) {
     console.warn("일정 불러오기 실패:", err);
   }
 }
+// Supabase Realtime 설정
+const SUPABASE_URL = "https://fqtlcrytdwdtnwugtpqt.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; // 너의 anon 키
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// 일정 변경 감지
+supabase
+  .channel("schedules-watch")
+  .on("postgres_changes", {
+    event: "UPDATE",
+    schema: "public",
+    table: "raid_schedules"
+  }, (payload) => {
+    const raidId = payload.new.raid_id;
+    console.log("📡 일정 변경 감지:", raidId);
+    loadSchedule(raidId);
+  })
+  .subscribe();
+
+// 카드 추가/삭제 감지
+supabase
+  .channel("cards-watch")
+  .on("postgres_changes", {
+    event: "INSERT",
+    schema: "public",
+    table: "raid_cards"
+  }, (payload) => {
+    const raidId = payload.new.raid_id;
+    console.log("📡 카드 추가 감지:", raidId);
+    loadRaidCards(raidId);
+  })
+  .on("postgres_changes", {
+    event: "DELETE",
+    schema: "public",
+    table: "raid_cards"
+  }, (payload) => {
+    const raidId = payload.old.raid_id;
+    console.log("📡 카드 삭제 감지:", raidId);
+    loadRaidCards(raidId);
+  })
+  .subscribe();
 
 
   </script>
