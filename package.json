@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "name": "soonmoo-api",
   "version": "1.0.0",
   "description": "Lost Ark 캐릭터 프로필 API Proxy Server",
@@ -10,20 +9,7 @@
   "dependencies": {
     "express": "^4.18.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5"
-=======
-  "name": "test",
-  "version": "1.0.0",
-  "main": "supabaseClient.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
+    "dotenv": "^16.4.5",
     "@supabase/supabase-js": "^2.50.2"
->>>>>>> 3c29aed (🚀 순무 프로젝트 첫 푸시!)
   }
 }
