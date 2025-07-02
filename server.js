@@ -102,15 +102,23 @@ app.post('/schedules/:raid_id', async (req, res) => {
   const { raid_id } = req.params;
   const { date, time, level } = req.body;
 
+  // 🔍 디버깅 로그
+  console.log("📥 요청 받은 raid_id:", raid_id);
+  console.log("📥 요청 받은 body:", req.body);
+
   const { data, error } = await supabase
     .from('raid_schedules')
     .upsert({ raid_id, date, time, level, updated_at: new Date().toISOString() })
     .select()
     .single();
-console.log("🧾 Supabase 응답:", data, error);
+
+  // 🔍 Supabase 응답도 확인
+  console.log("🧾 Supabase 응답:", data, error);
+
   if (error) return res.status(500).json({ error: error.message });
   res.json(data);
 });
+
 
 
 // 🚀 Render 포트 설정
