@@ -89,7 +89,7 @@ app.get('/schedules/:raid_id', async (req, res) => {
     .from('raid_schedules')
     .select('*')
     .eq('raid_id', raid_id)
-    .single();
+    .maybeSingle();
 
   if (error && error.code !== 'PGRST116')
     return res.status(500).json({ error: error.message });
