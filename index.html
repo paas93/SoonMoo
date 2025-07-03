@@ -256,6 +256,11 @@ async function loadRaidCards(raidId) {
     console.warn("카드 불러오기 실패:", e);
   }
 }
+function getWeekday(dateString) {
+  const days = ["일", "월", "화", "수", "목", "금", "토"];
+  const date = new Date(dateString);
+  return days[date.getDay()];
+}
 
       
 function clearSchedule(id) {
@@ -301,7 +306,8 @@ async function saveSchedule(id) {
     if (warning) warning.textContent = "";
   }
 
-  const display = `📌 예정: ${date} ${time} (${level})`;
+const weekday = getWeekday(date);
+const display = `📌 예정: ${date} (${weekday}) ${time} (${level})`;
   document.getElementById(id + "Schedule").textContent = display.trim();
 
   try {
