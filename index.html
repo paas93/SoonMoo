@@ -56,15 +56,21 @@ padding: 30px; text-align: center;
       display: block;
       padding: 6px 8px;
     }
-    .raid-section {
-      display: none;
-      max-width: 1000px;
-      margin: 0 auto 50px;
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 20px;
-      text-align: left;
-    }
+.raid-section {
+  display: none;
+  max-width: 1000px;
+  margin: 0 auto 50px;
+  background: rgba(255, 255, 255, 0.8); /* ✅ 불투명 → 반투명으로 */
+  border-radius: 10px;
+  padding: 20px;
+  text-align: left;
+
+  /* ✅ 반짝이는 유리 느낌 추가 */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px); /* iOS 대응 */
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2); /* 음영으로 살짝 떠 있는 느낌 */
+}
+
     .raid-section.active { display: block; }
     form input, form select, form button {
       margin: 5px;
