@@ -60,12 +60,10 @@ padding: 30px; text-align: center;
   display: none;
   max-width: 1000px;
   margin: 0 auto 50px;
-  background: rgba(255, 255, 255, 0.8); /* ✅ 불투명 → 반투명으로 */
+  background: rgba(255, 255, 255, 0.6); 
   border-radius: 10px;
   padding: 20px;
   text-align: left;
-
-  /* ✅ 반짝이는 유리 느낌 추가 */
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px); /* iOS 대응 */
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.2); /* 음영으로 살짝 떠 있는 느낌 */
@@ -110,12 +108,12 @@ padding: 30px; text-align: center;
       cursor: pointer;
       font-weight: bold;
     }
-    .schedule {
-      background: #eeeeee;
-      padding: 10px;
-      border-radius: 6px;
-      margin-bottom: 15px;
-    }
+.schedule {
+  background: rgba(238, 238, 238, 0.8);
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.3/dist/umd/supabase.min.js"></script>
 
