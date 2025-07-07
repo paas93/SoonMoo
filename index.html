@@ -228,10 +228,6 @@ async function addCharacter(event, raidId) {
   const role = form.querySelector("select").value;
   const cardBox = document.getElementById(raidId + "Cards");
 
-  if (cardBox.children.length >= 8) {
-    alert("⚠️ 이 파티엔 최대 8명까지만 등록할 수 있어요!");
-    return;
-  }
 
   try {
     const res = await fetch(`${API_BASE}/armories/characters/${encodeURIComponent(nickname)}/profiles`);
