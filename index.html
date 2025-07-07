@@ -229,27 +229,31 @@ async function addCharacter(event, raidId) {
   const cardBox = document.getElementById(raidId + "Cards");
 
 
-  try {
-    const res = await fetch(`${API_BASE}/armories/characters/${encodeURIComponent(nickname)}/profiles`);
-    if (!res.ok) throw new Error();
-    const data = await res.json();
+ try {
+  const res = await fetch(`${API_BASE}/armories/characters/${encodeURIComponent(nickname)}/profiles`);
+  if (!res.ok) throw new Error("프로필 요청 실패");
+  const data = await res.json();
 
-    // 🔥 Supabase에 저장
-    const save = await fetch(`${API_BASE}/cards`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ raid_id: raidId, nickname, role })
-    });
-    const saved = await save.json();
+  const save = await fetch(`${API_BASE}/cards`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ raid_id: raidId, nickname, role })
+  });
+  const saved = await save.json();
 
-    // 카드 생성 후 화면에 추가
-    const card = createCard(data, role, saved.id);
+  const card = createCard(data, role, saved.id);
+
+  if (card) {
     cardBox.appendChild(card);
     form.reset();
-  } catch (e) {
-    alert("❌ 캐릭터 정보를 불러오지 못했어요.");
-    console.error(e);
+  } else {
+    console.warn("❌ 카드 생성 실패: createCard가 null을 반환함");
   }
+} catch (e) {
+  alert("❌ 캐릭터 정보를 불러오지 못했어요.");
+  console.error(e);
+}
+
 }
 
 
